@@ -140,9 +140,10 @@ RainyDay.prototype.rain = function(presets, speed) {
 			}
 		}
 
-		setInterval(
-			(function(self) {
-				return function() {
+		requestAnimationFrame = requestAnimationFrame || mozRequestAnimationFrame || function(cb){ setTimeout(cb, speed) };
+
+		var self = this;
+		function animationCallback() {
 					var random = Math.random();
 					// select matching preset
 					var preset;
@@ -155,10 +156,10 @@ RainyDay.prototype.rain = function(presets, speed) {
 					if (preset) {
 						self.putDrop(new Drop(self, Math.random() * self.w, Math.random() * self.h, preset.min, preset.base));
 					}
+					requestAnimationFrame(animationCallback);
 				}
-			})(this),
-			speed
-		);
+		
+		requestAnimationFrame(animationCallback);
 	} else {
 		// static picture
 		for (var i = 0; i < presets.length; i++) {
